@@ -1,0 +1,16 @@
+{
+    "name": "project.features.colorrandomizer.editor",
+    "rootNamespace": "Project.Features.ColorRandomizer.Editor",
+    "references": [
+        "GUID:e5906c92e14b9a343b21014400e63445"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

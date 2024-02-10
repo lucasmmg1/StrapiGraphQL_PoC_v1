@@ -1,0 +1,17 @@
+{
+    "name": "project.features.colorrandomizer.runtime",
+    "rootNamespace": "Project.Features.ColorRandomizer.Runtime",
+    "references": [
+        "GUID:d9c4a3993822f42439e43ee7d2d1f243",
+        "GUID:8696fb82fc19abe499b2e52f3ae7ac0e"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
