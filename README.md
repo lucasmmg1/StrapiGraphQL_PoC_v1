@@ -1,4 +1,4 @@
-# READ ME
+# README
 
 # Proof of Concept: Strapi server with GraphQL query
 This is a proof of concept made for testing a GraphQL query made to a Strapi in order to retrieve a random color and change a cube's material in an Unity project.
