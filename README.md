@@ -23,14 +23,14 @@ This is a proof of concept made for testing a GraphQL query made to a Strapi in 
 </p>
 
 <h2> Steps </h2>
-<p> Strapi installation: run the following command: npm install strapi@latest -g </p>
-<p> Creation of the project: run the following command and press enter into every step: strapi new StrapiServer </p>
-<p> Entering the folder: just enter the folder with the following command: cd StrapiServer </p>
-<p> Project's build: run the following command: npm run build </p>
-<p> Enter the [admin webpage](http://localhost:1337/admin) and create an admin profile </p>
-<p> Install the GraphQL: run the following command: npm install --save graphql </p>
-<p> Enter the admin's Content-Types Builder and create the color type. </p>
-<p> Add the colors according to your desire. </p>
+<p> 1: Strapi installation: run the following command: npm install strapi@latest -g </p>
+<p> 2: Creation of the project: run the following command and press enter into every step: strapi new StrapiServer </p>
+<p> 3: Entering the folder: just enter the folder with the following command: cd StrapiServer </p>
+<p> 4: Project's build: run the following command: npm run build </p>
+<p> 5: Enter the [admin webpage](http://localhost:1337/admin) and create an admin profile </p>
+<p> 6: Install the GraphQL: run the following command: npm install --save graphql </p>
+<p> 7: Enter the admin's Content-Types Builder and create the color type. </p>
+<p> 8: Add the colors according to your desire. </p>
 
 <h2> Observations </h2>
 <p> When downloading the repository, remeber to enter the StrapiServer folder via command line and run the following commands: npm install and npm run develop </p>
