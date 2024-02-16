@@ -1,13 +1,11 @@
 namespace Project.Features.ColorRandomizer.Runtime
 {
     using System.Collections;
-    using System.Collections.Generic;
     using System.Threading.Tasks;
     using UnityEngine;
     using SimpleGraphQL;
     using Base.Runtime;
-    using Color = Base.Runtime.Color;
-    using Random = UnityEngine.Random;
+    using TMPro;
 
     [AddComponentMenu("Scripts/Project/Features/ColorRandomizer/ColorRandomizerSceneController")]
     public class ColorRandomizerSceneController : MonoBehaviour
@@ -15,15 +13,15 @@ namespace Project.Features.ColorRandomizer.Runtime
         #region Variables
 
         #region Private Variables
-
+        
+        [SerializeField] private int allowedAmountOfExceptions;
+        [SerializeField] private float timeToWaitBeforeChangingColor;
         [SerializeField] private Renderer cube;
+        [SerializeField] private TextMeshProUGUI colorNameTMP;
+        [SerializeField] private string endpoint;
+        [TextArea][SerializeField] private string query;
+        private int _thrownExceptions;
         private GraphQLClient _client;
-        private const string Query = @"
-        {
-            colors {
-                name
-            }
-        }";
 
         #endregion
 
@@ -35,49 +33,77 @@ namespace Project.Features.ColorRandomizer.Runtime
 
         private void Start()
         {
-            _client = new GraphQLClient("http://localhost:1337/graphql");
+            _client = new GraphQLClient(endpoint);
             StartCoroutine(ChangeColorEverySecondCoroutine());
         }
         private IEnumerator ChangeColorEverySecondCoroutine()
         {
             while (true)
             {
-                yield return Enumerators.TaskToIEnumerator(ChangeColorEverySecondTask());
+                if (_thrownExceptions >= allowedAmountOfExceptions)
+                {
+                    Debug.LogError("Exceptions' limit reached. Stopping the coroutine.");
+                    yield break;
+                }
+
+                var task = ChangeColorEverySecondTask();
+                yield return task.ToIEnumerator();
+                if (task.IsFaulted && task.Exception != null)
+                {
+                    var wordWithCorrectTermination = FloatExtensions.Equals(timeToWaitBeforeChangingColor, 1) ? "second" : "seconds";
+                    Debug.LogError($"Exception: {task.Exception}");
+                    Debug.LogWarning($"Trying again in {timeToWaitBeforeChangingColor} {wordWithCorrectTermination}");
+                    _thrownExceptions++;
+                }
                 yield return new WaitForSeconds(1);
             }
         }
         private async Task ChangeColorEverySecondTask()
         {
-            Debug.Log("Randomizing new color");
-            var request = new Request {Query = Query};
-            var responseType = new { colors = new[] {new {name = ""}}};
-            var response = await _client.Send(() => responseType, request);
-            if (response.Errors is {Length: > 0})
-            {
-                Debug.LogError(response.Errors);
-                return;
-            }
-            AssignNewColor(GetRandomColorFromList(response.Data.colors));
-        }
-        private UnityEngine.Color GetRandomColorFromList(IReadOnlyList<dynamic> colors)
-        {
-            int randomIndex;
+            var request = new Request {Query = query};
+            var responseType = new {getRandomColor = new {name = ""}};
+            var color = cube.material.color;
+            
             do
             {
-                randomIndex = Random.Range(0, colors.Count);
-            } while (Color.HexToRGB(colors[randomIndex].name) == cube.material.color);
-            return Color.HexToRGB(colors[randomIndex].name);
+                var response = await _client.Send(() => responseType, request);
+                if (response.Errors is {Length: > 0})
+                {
+                    Debug.LogError(response.Errors);
+                    _thrownExceptions++;
+                }
+                else
+                {
+                    color = response.Data.getRandomColor.name.ToRGBColor();
+                }
+            } while (color == cube.material.color);
+            AssignCubeColor(color);
+            AssignColorName(color.ToHexColor());
         }
-        private void AssignNewColor(UnityEngine.Color color)
+        private void AssignCubeColor(Color color)
         {
-            switch (cube != null)
+            if (cube != null)
             {
-                case true:
-                    cube.material.color = color;
-                    break;
-                default:
-                    Debug.LogWarning("Warning: cube is not assigned");
-                    break;
+                cube.material.color = color;
+            }
+            else
+            {
+                Debug.LogWarning("Warning: cube's variable not assigned");
+                _thrownExceptions++;
+            }
+        }
+        private void AssignColorName(string colorName)
+        {
+            if (colorNameTMP != null)
+            {
+                if (!colorNameTMP.gameObject.activeSelf)
+                    colorNameTMP.gameObject.SetActive(true);
+                
+                colorNameTMP.text = $"Current color: {colorName}";
+            }
+            else
+            {
+                Debug.LogWarning("Warning: colorNameTMP's variable not assigned");
             }
         }
 

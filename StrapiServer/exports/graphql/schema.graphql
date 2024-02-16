@@ -637,6 +637,7 @@ type Query {
   users(sort: String, limit: Int, start: Int, where: JSON, publicationState: PublicationState): [UsersPermissionsUser]
   usersConnection(sort: String, limit: Int, start: Int, where: JSON): UsersPermissionsUserConnection
   me: UsersPermissionsMe
+  getRandomColor: Color!
 }
 
 type Mutation {

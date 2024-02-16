@@ -47,6 +47,14 @@
       "config": {
         "policies": []
       }
+    },
+    {
+      "method": "GET",
+      "path": "/colors/getRandom",
+      "handler": "color.getRandom",
+      "config": {
+        "policies": []
+      }
     }
   ]
 }
